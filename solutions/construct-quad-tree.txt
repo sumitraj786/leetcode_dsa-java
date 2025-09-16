@@ -1,0 +1,79 @@
+/*
+// Definition for a QuadTree node.
+class Node {
+    public boolean val;          // true means this region is all 1's, false means all 0's
+    public boolean isLeaf;       // true if this node is a leaf (no children, uniform region)
+    public Node topLeft;         // pointer to top-left child
+    public Node topRight;        // pointer to top-right child
+    public Node bottomLeft;      // pointer to bottom-left child
+    public Node bottomRight;     // pointer to bottom-right child
+
+    public Node() {}
+
+    public Node(boolean val, boolean isLeaf) {
+        this.val = val;
+        this.isLeaf = isLeaf;
+    }
+
+    public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
+        this.val = val;
+        this.isLeaf = isLeaf;
+        this.topLeft = topLeft;
+        this.topRight = topRight;
+        this.bottomLeft = bottomLeft;
+        this.bottomRight = bottomRight;
+    }
+};
+*/
+
+class Solution {
+    public Node construct(int[][] grid) {
+        // Start recursion from the entire grid (top-left corner at (0,0), full size = n)
+        return build(grid, 0, 0, grid.length);
+    }
+
+    private Node build(int[][] grid, int row, int col, int size) {
+        // Assume initially that all values in this square are the same
+        boolean same = true;
+        // Take the first cell value as reference
+        int firstVal = grid[row][col];
+
+        // Check all cells in this region (from row..row+size, col..col+size)
+        for (int i = row; i < row + size; i++) {
+            for (int j = col; j < col + size; j++) {
+                // If we find a different value, mark region as mixed
+                if (grid[i][j] != firstVal) {
+                    same = false;
+                    break; // break inner loop
+                }
+            }
+            if (!same) break; // break outer loop also
+        }
+
+        // If all cells are the same, this is a leaf node
+        if (same) {
+            // Create a leaf node
+            // val = true if it's 1, false if it's 0
+            return new Node(firstVal == 1, true);
+        }
+
+        // Otherwise: region is mixed, so we split into 4 quadrants
+        int newSize = size / 2;
+
+        // Recursively build top-left quadrant
+        Node topLeft = build(grid, row, col, newSize);
+
+        // Recursively build top-right quadrant
+        Node topRight = build(grid, row, col + newSize, newSize);
+
+        // Recursively build bottom-left quadrant
+        Node bottomLeft = build(grid, row + newSize, col, newSize);
+
+        // Recursively build bottom-right quadrant
+        Node bottomRight = build(grid, row + newSize, col + newSize, newSize);
+
+        // Create a non-leaf node with 4 children
+        // For non-leaf nodes, val can be anything (commonly set to true)
+        return new Node(true, false, topLeft, topRight, bottomLeft, bottomRight);
+    }
+}
