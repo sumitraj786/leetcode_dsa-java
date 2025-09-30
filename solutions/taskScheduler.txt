@@ -1,0 +1,32 @@
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        
+        HashMap<Character, Integer> freq = new HashMap<>();
+        for(char t: tasks) {
+            freq.put(t, freq.getOrDefault(t,0) + 1);
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        pq.addAll(freq.values());
+        int intervals = 0;
+        Queue<int[]> gap = new LinkedList<>();
+
+        while(!pq.isEmpty() || !gap.isEmpty()) {
+            intervals++;
+
+            if(!pq.isEmpty()) {
+                int remFreq = pq.poll() - 1;
+
+                if(remFreq > 0) {
+                    gap.offer(new int[]{remFreq, intervals + n});
+                }
+            }
+
+            if(!gap.isEmpty() && gap.peek()[1] == intervals)  {
+                pq.offer(gap.poll()[0]);
+            }
+        }
+
+        return intervals;
+    }
+}
