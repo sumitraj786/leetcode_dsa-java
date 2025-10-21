@@ -1,0 +1,22 @@
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(k, 1, n, result, new ArrayList<>());
+
+        return result;
+    }
+
+    private void backtrack(int k, int start, int end, List<List<Integer>> result, List<Integer> current) {
+        
+        if(current.size() == k) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for(int i = start; i <= end; i++) {
+            current.add(i);
+            backtrack(k, i + 1, end, result, current);
+            current.remove(current.size() - 1); //means backtrack
+        }
+    }
+}
