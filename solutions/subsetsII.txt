@@ -1,0 +1,20 @@
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> subset = new ArrayList<>();
+        Arrays.sort(nums); //[1,2,2]
+        backtrack(subset, nums, new ArrayList<>(), 0);
+        return subset;
+    }
+
+    private void backtrack(List<List<Integer>> subset, int[] nums, List<Integer> currentPath, int index) {
+        subset.add(new ArrayList<>(currentPath)); //[]->[1]->[1,2]->[1,2,2]
+
+        for(int i = index; i < nums.length; i++) { //i=0->1->2->3
+            if(i > index && nums[i] == nums[i - 1]) continue; //false->false->false
+
+            currentPath.add(nums[i]); //[1]->[1,2]->[1,2,2]
+            backtrack(subset,nums, currentPath, i + 1); //1->2->3
+            currentPath.remove(currentPath.size() - 1); //[1,2]
+        }
+    }
+}
