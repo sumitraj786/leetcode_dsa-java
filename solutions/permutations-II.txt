@@ -4,26 +4,26 @@ class Solution {
         Arrays.sort(nums);
         boolean[] used = new boolean[nums.length];
 
-        backtrack(result, nums, new ArrayList<>(), used);
+        backtrack(result, nums, new ArrayList<>(), used); //[1,1,2]
 
         return result;
     }
 
     private void backtrack(List<List<Integer>> result, int[] nums, List<Integer> currentPath, boolean[] used) {
 
-        if(currentPath.size() == nums.length) {
+        if(currentPath.size() == nums.length && !result.contains(currentPath)) { //0->1
             result.add(new ArrayList<>(currentPath));
             return;
         }
 
-        for(int i = 0; i < nums.length; i++) {
+        for(int i = 0; i < nums.length; i++) { //0->1->
             
-            if(used[i]) continue;
-            if(i > 0 && nums[i - 1] == nums[i] && !used[i - 1]) continue;
-            
-            currentPath.add(nums[i]);
-            used[i] = true;
-            backtrack(result, nums, currentPath, used);
+            if(used[i]) continue; //false->false->
+            //if(i > 0 && nums[i - 1] == nums[i] && !used[i - 1]) continue;//false->false
+
+            currentPath.add(nums[i]);//[1]
+            used[i] = true; //used[0]=false
+            backtrack(result, nums, currentPath, used); //[1]
             currentPath.remove(currentPath.size() - 1);
             used[i] = false;
         }
