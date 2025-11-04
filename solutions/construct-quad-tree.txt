@@ -53,10 +53,10 @@ class Solution {
 
         // Otherwise -> Divide into 4 sub-grids
         int newSize = size / 2;
-        Node topLeft = build(grid, row, col, newSize);
-        Node topRight = build(grid, row, col + newSize, newSize);
-        Node bottomLeft = build(grid, row + newSize, col, newSize);
-        Node bottomRight = build(grid, row + newSize, col + newSize, newSize);
+        Node topLeft = build(grid, row, col, newSize); //top left sub grid
+        Node topRight = build(grid, row, col + newSize, newSize); //top right sub grid
+        Node bottomLeft = build(grid, row + newSize, col, newSize); //bottom left sub grid
+        Node bottomRight = build(grid, row + newSize, col + newSize, newSize); //bottom right sub grid
 
         return new Node(true, false, topLeft, topRight, bottomLeft, bottomRight);
     }
