@@ -1,22 +1,37 @@
 class Solution {
     public boolean exist(char[][] board, String word) {
-        boolean result = false;
-        backtrack(result, board, word, "");
-        return result;
-    }
+        int row = board.length, col = board[0].length;
+        boolean[][] visited = new boolean[row][col];
 
-    private boolean backtrack(boolean result, char[][] board, String word, String currentString) {
-        if(word.equals(currentString)) {
-            result = true;
-            
-        }
-        
-        int rows = board.length;
-        int cols = board[0].length;
-        for(int i =0 ; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
-
+        for(int i = 0;i < row; i++) {
+            for(int j = 0; j< col; j++) {
+                if(word.charAt(0) == board[i][j] && recursion(board, visited, i, j, 0, word)) {
+                    return true;
+                }
             }
         }
+
+        return false;
+    }
+
+    private boolean recursion(char[][] board, boolean[][] visited, int row, int col, int index, String word) {
+
+        if(index == word.length()) {
+            return true;
+        }
+
+        if(row < 0 || row >= board.length || col < 0 || col >= board[0].length || visited[row][col] || word.charAt(index) != board[row][col]) {
+            return false;
+        }
+
+        visited[row][col] = true;
+        boolean match = recursion(board, visited, row - 1, col, index + 1, word) ||
+                        recursion(board, visited, row + 1, col, index + 1, word) ||
+                        recursion(board, visited, row, col + 1, index + 1, word) ||
+                        recursion(board, visited, row, col - 1, index + 1, word);
+
+        
+        visited[row][col] = false;
+        return match;
     }
 }
