@@ -1,0 +1,53 @@
+class Solution {
+    //dry run : matchsticks = [1,1,2,2,2]
+    public boolean makesquare(int[] matchsticks) {
+        int sum = 0;
+        for (int i : matchsticks) {
+            sum += i; //sum->8
+        }
+
+        if (sum % 4 != 0) { //sum%4->0
+            return false; //true
+        }
+
+        Arrays.sort(matchsticks); //[1,1,2,2,2]
+        reverse(matchsticks); //[2,2,2,1,1]
+
+        int sideLength = sum / 4; //sideLength-> 2
+        int[] sides = new int[4];
+
+        return recursion(matchsticks, sideLength, 0, sides);
+    }
+
+    private boolean recursion(int[] sticks, int sideLength, int index, int[] sides) {
+       
+        if (index == sticks.length) { //index->0->1->2->3->4                    sticks.length->5
+            return sides[0] == sideLength && sides[1] == sideLength &&
+                   sides[2] == sideLength && sides[3] == sideLength;
+        }
+
+        int current = sticks[index]; //current->2->2->2->1
+
+        // try to place current stick in one of 4 sides
+        for (int i = 0; i < 4; i++) { //i->0
+            if (sides[i] + current <= sideLength) { //2<=2->4<=2->2<=2->4!<=2,4!<=2,2<=2
+                sides[i] += current; //0->2,1->2,2->2,3->2,4->1 -->4->2
+                if (recursion(sticks, sideLength, index + 1, sides)) return true; //index->1->2->3->4->5
+                sides[i] -= current; // backtrack
+            }
+
+            
+            if (sides[i] == 0) break;
+        }
+
+        return false;
+    }
+
+    private void reverse(int[] arr) {
+        for (int i = 0, j = arr.length - 1; i < j; i++, j--) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+}
