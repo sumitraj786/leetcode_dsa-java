@@ -1,42 +1,48 @@
 class Solution {
+    //[4,3,2,3,5,2,1], k=4
     public boolean canPartitionKSubsets(int[] nums, int k) {
-        int total = 0;
-        for (int n : nums) total += n;
-
-        if (total % k != 0) return false;
-        int target = total / k;
-
-        Arrays.sort(nums);
-        reverse(nums); // optional optimization
+        int sum = 0; 
+        for(int i : nums) {
+            sum+=i;
+        }
+        if((sum % k) != 0) { //sum->20 % 4==0
+            return false;
+        }
+        int target = sum / k;
+        Arrays.sort(nums); //sum-> [1,2,2,3,3,4,5]
         boolean[] used = new boolean[nums.length];
-
-        return backtrack(nums, used, k, 0, 0, target);
+        reverse(nums);
+        return recursion(nums, k, 0, 0, target, used);
     }
 
-    private boolean backtrack(int[] nums, boolean[] used, int k, int start, int currentSum, int target) {
-        if (k == 1) return true; // only one subset left automatically valid
+    //nums=[5,4,3,3,2,2,1]
+    private boolean recursion(int[] nums, int k, int index, int currentSum, int target, boolean[] used) {
 
-        if (currentSum == target) {
-            // one subset formed → move to next
-            return backtrack(nums, used, k - 1, 0, 0, target);
+        if(k == 1) { //k->4->3
+            return true;
         }
 
-        for (int i = start; i < nums.length; i++) {
-            if (used[i] || currentSum + nums[i] > target) continue;
-
-            used[i] = true;
-            if (backtrack(nums, used, k, i + 1, currentSum + nums[i], target)) return true;
-            used[i] = false; // backtrack
+        if(currentSum == target) {//cs->0->5->4->5                       target->5                      
+            return recursion(nums, k - 1, 0, 0, target, used); //k->3->2
         }
 
+        for(int i = index; i < nums.length;i++) { //i->0->1(4)->2(3)->3(3)->4(2)->5(2)->6(1)
+            if(used[i] || currentSum + nums[i] > target) {//used[1]->false || cs->5->4, used[2]->true || cs+num->7->6->5      t->5
+                continue;
+            }
+            used[i] = true; //used[i]->true,used[1]->true->used[5]=true
+            if(recursion(nums, k, i + 1, currentSum + nums[i],target, used)) { //index->1->2->6
+                return true;
+            }
+            used[i] = false; //used[0]->false, used[5]=true
+        }
         return false;
     }
-
-    private void reverse(int[] arr) {
-        for (int i = 0, j = arr.length - 1; i < j; i++, j--) {
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+    private void reverse(int[] nums) {
+        for(int i = 0, j = nums.length - 1; i < j; i++, j--) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
         }
     }
 }
