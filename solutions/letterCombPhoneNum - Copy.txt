@@ -1,0 +1,34 @@
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> results = new ArrayList<>();
+        Map<Character,String> map =new HashMap<>();
+        map.put('1',"");
+        map.put('2',"abc");
+        map.put('3',"def");
+        map.put('4',"ghi");
+        map.put('5',"jkl");
+        map.put('6',"mno");
+        map.put('7',"pqrs");
+        map.put('8',"tuv");
+        map.put('9',"wxyz");
+        
+        recursion(results,map, digits, 0, ""); //23
+        return results;
+    }
+
+    private void recursion(List<String> results, Map<Character,String> map, String digits, int index, String currentPath) {
+
+        if(index == digits.length()) { //index->0->1->2->2                   digits.length-> 2
+            results.add(currentPath); //results->[ad]->[ae,ad]
+            return;
+        }
+
+        char currentDigit = digits.charAt(index); // 2->3->0
+        String currentLetters = map.get(currentDigit); //currentLetter->abc ->def
+        //index->0
+        for(char c : currentLetters.toCharArray()) { //['a','b','c']->[d,e,f] ,c->e
+            recursion(results, map, digits, index + 1, currentPath + c); //index-> 1->2->1        currentPath->a->ad->a->ae
+        }
+    }
+}
+//
